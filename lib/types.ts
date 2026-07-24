@@ -3,16 +3,36 @@
 // todos los objetos llevan additionalProperties:false y required completo,
 // sin restricciones de longitud ni numéricas.
 
-export type Etapa = "idea" | "prototipo" | "vendiendo" | "escalando";
+// La etapa es lo PRIMERO que elige el emprendedor y calibra todo el análisis.
+export type Etapa = "idea" | "iniciado" | "consolidado";
+export type Alcance = "local" | "nacional" | "online" | "internacional";
+export type Objetivo =
+  | "validar"
+  | "primeros-clientes"
+  | "aumentar-ventas"
+  | "marca-presencia"
+  | "escalar";
+export type NivelIA = "nunca" | "basico" | "seguido" | "integrada";
 
+// Entrada del estudio: preguntas objetivas y específicas, nivel analista de
+// negocio + posicionamiento digital.
 export interface IdeaInput {
-  idea: string;
+  etapa: Etapa;
+  // Bloque 1 — validar y diferenciar
+  producto: string;
   problema: string;
   cliente: string;
-  etapa: Etapa;
+  diferenciador: string;
+  competencia: string;
+  // Bloque 2 — situación
+  modelo: string;
+  alcance: Alcance;
+  ubicacion: string;
   recursos: string;
-  modelo?: string;
-  ubicacion?: string;
+  // Bloque 3 — presencia digital y meta
+  presenciaDigital: string[];
+  objetivo: Objetivo;
+  nivelIA: NivelIA;
 }
 
 export type NivelVeredicto = "adelante" | "ajustar" | "replantear";

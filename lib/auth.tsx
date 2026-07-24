@@ -122,7 +122,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     (input: IdeaInput, respuesta: AnalisisRespuesta) => {
       const item: AnalisisGuardado = {
         id: `a_${Date.now()}`,
-        titulo: input.idea.slice(0, 80),
+        titulo: input.producto.slice(0, 80),
         fecha: new Date().toISOString(),
         input,
         respuesta,

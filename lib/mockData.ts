@@ -5,7 +5,7 @@ import type { Analisis, IdeaInput } from "./types";
 // que el flujo se sienta real. La UI lo marca claramente como "ejemplo".
 export function generarEjemplo(input: IdeaInput): Analisis {
   const cliente = input.cliente?.trim() || "tu cliente ideal";
-  const idea = input.idea?.trim() || "tu idea";
+  const idea = input.producto?.trim() || "tu producto";
 
   return {
     veredicto: {

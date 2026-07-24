@@ -228,7 +228,7 @@ export default function PerfilPage() {
         {proyectos.length === 0 ? (
           <p className="mt-4 rounded-2xl border border-dashed border-border p-8 text-center text-muted">
             Aún no has publicado un proyecto. Publícalo en la comunidad para que
-            otros builders te encuentren.
+            otros emprendedores te encuentren.
           </p>
         ) : (
           <div className="mt-4 grid gap-3 sm:grid-cols-2">

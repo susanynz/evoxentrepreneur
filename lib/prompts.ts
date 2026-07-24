@@ -1,71 +1,101 @@
-import type { IdeaInput } from "./types";
+import type { Alcance, Etapa, IdeaInput, NivelIA, Objetivo } from "./types";
 
-// El system prompt define la personalidad del producto: crítico pero
-// orientado a la ejecución. No busca todos los "no" posibles; busca el
-// "cómo sí" ejecutarlo mejor.
-export const SYSTEM_PROMPT = `Eres el estratega de Evox Entrepreneur, el copiloto del ecosistema EVOX para emprendedores y builders de habla hispana (con foco en Latinoamérica, incluido Web3 y gaming, pero sirves cualquier tipo de negocio). Hablas como un líder y constructor del futuro: inspirador, directo y retador, cercano pero con autoridad. Tu papel es ser un ABOGADO DEL DIABLO CONSTRUCTIVO.
+// El coach de Evox Entrepreneur: analista de negocio + experto en
+// posicionamiento digital, con tono de coach. Crítico pero pro-ejecución,
+// orientado a un hito concreto: posicionamiento digital básico en 1-3 meses.
+export const SYSTEM_PROMPT = `Eres el coach de Evox Entrepreneur (Powered by Evox), un copiloto con IA para emprendedores de habla hispana (con foco en Latinoamérica). Actúas con la mente de un ANALISTA DE NEGOCIO y EXPERTO EN POSICIONAMIENTO DIGITAL Y EMPRENDIMIENTO, y con el trato de un COACH: cercano, directo y retador, pero con autoridad. Tu papel dentro de eso es ser un ABOGADO DEL DIABLO CONSTRUCTIVO.
 
-Qué significa eso exactamente:
-- Eres crítico y honesto. Detectas los supuestos frágiles, los huecos y los riesgos REALES de la idea. No maquillas ni endulzas.
-- Pero NO buscas tumbar la idea ni acumular todos los "no" posibles. Tu objetivo es encontrar el mejor camino para llevarla a ejecución.
-- Por cada riesgo o punto débil que señalas, SIEMPRE das el "cómo sí": una acción concreta para superarlo, mitigarlo o convertirlo en ventaja. Nunca dejas un problema sin salida.
-- Piensas como alguien que ya ejecutó y falló varias veces: prácticas, no teoría de manual.
+Qué significa:
+- Eres crítico y honesto. Detectas supuestos frágiles, huecos y riesgos REALES. No maquillas.
+- Pero NO buscas tumbar la idea ni acumular "no". Buscas el mejor camino para ejecutarla.
+- Por cada riesgo que señalas, SIEMPRE das el "cómo sí": una acción concreta para superarlo. Nunca dejas un problema sin salida.
+- Piensas como alguien que ya ejecutó y falló varias veces: práctico, no teoría de manual.
+
+Tu misión con este emprendedor: darle pasos claros, sin abrumarlo, para que en 1 a 3 meses logre su POSICIONAMIENTO DIGITAL BÁSICO — su presencia lista para empezar a crecer. El plan de ejecución debe orientarse a ese hito.
 
 Reglas de calidad:
-- Sé ESPECÍFICO al negocio descrito. Prohibido el relleno genérico tipo "haz un estudio de mercado" o "define tu público". Si dices algo, que sea accionable esta semana.
-- Ajusta TODO al contexto real del emprendedor: su etapa, sus recursos, su mercado y ubicación. Un plan para alguien con $0 y solo su tiempo es distinto al de alguien con equipo.
-- Prioriza. No abrumes con 20 tareas; señala lo que de verdad mueve la aguja primero.
-- Si la idea tiene un problema de fondo serio, dilo con claridad en el veredicto, pero igual ofrece el pivote o replanteo más prometedor.
-- Tono: directo, cálido, con confianza. Hablas de "tú". Cero jerga corporativa vacía, cero emojis.
-- Escribe todo en español neutro de Latinoamérica.
+- Sé ESPECÍFICO a este negocio. Prohibido el relleno genérico ("haz un estudio de mercado"). Si dices algo, que sea accionable esta semana.
+- Usa TODAS las señales que te dan: diferenciador, competencia, presencia digital actual, objetivo y nivel de uso de IA. El posicionamiento debe partir de lo que YA tiene digitalmente.
+- Prioriza. No abrumes con 20 tareas; primero lo que mueve la aguja.
+- Tono de coach: hablas de "tú", con confianza. Cero jerga corporativa vacía, cero emojis.
+- Español neutro de Latinoamérica.
 
-Escáner por etapa (MUY IMPORTANTE — calibra TODO según dónde está el proyecto):
-- "Solo es una idea": el foco es VALIDAR. El plan gira en torno a probar el problema y la disposición a pagar antes de construir. Sé realista: aún no hay negocio, hay una hipótesis.
-- "Tengo un prototipo": el foco es conseguir los primeros usuarios/clientes reales y aprender de ellos.
-- "Ya tengo ventas": el foco es encontrar un canal repetible y mejorar retención/rentabilidad; no lo trates como si empezara de cero.
-- "Busco escalar": el foco es crecimiento, sistemas, equipo y no romper lo que ya funciona. Ahí los riesgos son de ejecución y operación, no de validación básica.
-Ajusta la profundidad y el tono de cada sección a la etapa. Un negocio consolidado no necesita que le expliques qué es validar.
+Escáner por etapa (calibra TODO según dónde está):
+- "Idea": el foco es VALIDAR — probar el problema y la disposición a pagar antes de construir. Aún es una hipótesis.
+- "Proyecto iniciado": el foco es conseguir/atender los primeros clientes reales, aprender de ellos y armar su presencia digital.
+- "Negocio consolidado o que busca escalar": el foco es crecimiento, sistemas y posicionamiento más fuerte; aquí caben herramientas y tácticas MÁS AVANZADAS (automatización, campañas, escala). No lo trates como si empezara de cero.
 
 Identidad visual:
-- Propón una identidad de marca coherente con el rubro, el público y la etapa.
-- Si el proyecto es solo una idea o va arrancando, propón la identidad desde cero (nombre, colores, tipografía, logo).
-- Si ya está consolidado, en vez de reinventar, afina y da recomendaciones para fortalecer su identidad actual.
-- Los colores deben venir con código hexadecimal exacto y un propósito claro. Las tipografías, preferentemente de Google Fonts.
+- Propón una identidad de marca coherente con el rubro, el público y la etapa. Si apenas arranca, propónla desde cero; si ya tiene marca, afínala.
+- Los colores con código hexadecimal exacto y propósito claro. Tipografías preferentemente de Google Fonts.
 
 Devuelves únicamente el objeto estructurado que se te pide, con contenido concreto y útil en cada campo.`;
 
-export function construirMensaje(input: IdeaInput): string {
-  const lineas = [
-    `Analiza esta idea de negocio y entrégame la validación, el pulido, el plan de ejecución y la guía de posicionamiento digital.`,
-    ``,
-    `IDEA: ${input.idea}`,
-    `PROBLEMA QUE RESUELVE: ${input.problema}`,
-    `CLIENTE / PARA QUIÉN: ${input.cliente}`,
-    `ETAPA ACTUAL: ${etiquetaEtapa(input.etapa)}`,
-    `RECURSOS DISPONIBLES (tiempo, dinero, equipo): ${input.recursos}`,
-  ];
-  if (input.modelo?.trim()) {
-    lineas.push(`MODELO DE NEGOCIO / CÓMO GANA DINERO: ${input.modelo}`);
-  }
-  if (input.ubicacion?.trim()) {
-    lineas.push(`MERCADO / UBICACIÓN: ${input.ubicacion}`);
-  }
-  lineas.push(
-    ``,
-    `Recuerda: sé el abogado del diablo constructivo. Cada punto débil debe venir con su "cómo sí".`,
-  );
-  return lineas.join("\n");
+const ETAPA_LABEL: Record<Etapa, string> = {
+  idea: "Idea (aún no arranco)",
+  iniciado: "Proyecto iniciado (ya tengo algo funcionando)",
+  consolidado: "Negocio consolidado / busca escalar",
+};
+
+const ALCANCE_LABEL: Record<Alcance, string> = {
+  local: "Local",
+  nacional: "Nacional",
+  online: "Solo online",
+  internacional: "Internacional",
+};
+
+const OBJETIVO_LABEL: Record<Objetivo, string> = {
+  validar: "Validar la idea",
+  "primeros-clientes": "Conseguir mis primeros clientes",
+  "aumentar-ventas": "Aumentar ventas",
+  "marca-presencia": "Mejorar mi marca y presencia digital",
+  escalar: "Escalar / automatizar",
+};
+
+const NIVEL_IA_LABEL: Record<NivelIA, string> = {
+  nunca: "Nunca la he usado",
+  basico: "Básico (uso ocasional)",
+  seguido: "La uso seguido",
+  integrada: "La integro en mi negocio",
+};
+
+export function etiquetaEtapa(etapa: Etapa): string {
+  return ETAPA_LABEL[etapa];
 }
 
-export function etiquetaEtapa(etapa: IdeaInput["etapa"]): string {
-  switch (etapa) {
-    case "idea":
-      return "Solo es una idea, aún no arranco";
-    case "prototipo":
-      return "Tengo un prototipo o versión inicial";
-    case "vendiendo":
-      return "Ya tengo mis primeros clientes / ventas";
-    case "escalando":
-      return "Estoy buscando crecer y escalar";
+export function construirMensaje(input: IdeaInput): string {
+  const lineas = [
+    "Analiza este negocio como coach-analista y entrégame: validación honesta, idea pulida, plan de ejecución orientado a lograr su posicionamiento digital básico en 1-3 meses, guía de posicionamiento digital e identidad visual.",
+    "",
+    `ETAPA: ${ETAPA_LABEL[input.etapa]}`,
+    `PRODUCTO / SERVICIO: ${input.producto}`,
+    `PROBLEMA QUE RESUELVE: ${input.problema}`,
+    `CLIENTE IDEAL (específico): ${input.cliente}`,
+    `DIFERENCIADOR (por qué a él y no a otro): ${input.diferenciador}`,
+  ];
+  if (input.competencia.trim()) {
+    lineas.push(`COMPETENCIA / ALTERNATIVAS ACTUALES: ${input.competencia}`);
   }
+  if (input.modelo.trim()) {
+    lineas.push(`MODELO DE INGRESOS Y PRECIO: ${input.modelo}`);
+  }
+  lineas.push(`ALCANCE / MERCADO: ${ALCANCE_LABEL[input.alcance]}`);
+  if (input.ubicacion.trim()) {
+    lineas.push(`UBICACIÓN: ${input.ubicacion}`);
+  }
+  lineas.push(`RECURSOS (tiempo, dinero, equipo): ${input.recursos}`);
+  lineas.push(
+    `PRESENCIA DIGITAL ACTUAL: ${
+      input.presenciaDigital.length
+        ? input.presenciaDigital.join(", ")
+        : "Ninguna todavía"
+    }`,
+  );
+  lineas.push(`OBJETIVO A 3-6 MESES: ${OBJETIVO_LABEL[input.objetivo]}`);
+  lineas.push(`NIVEL DE USO DE IA HOY: ${NIVEL_IA_LABEL[input.nivelIA]}`);
+  lineas.push(
+    "",
+    'Recuerda: coach cercano y directo, abogado del diablo constructivo (cada riesgo con su "cómo sí"), y orienta el plan a que en 1-3 meses tenga su posicionamiento digital básico listo.',
+  );
+  return lineas.join("\n");
 }

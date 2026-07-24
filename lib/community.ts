@@ -34,9 +34,8 @@ export const CATEGORIAS = [
 
 export const ETAPA_LABEL: Record<Etapa, string> = {
   idea: "Idea",
-  prototipo: "Prototipo",
-  vendiendo: "Vendiendo",
-  escalando: "Escalando",
+  iniciado: "Proyecto iniciado",
+  consolidado: "Consolidado",
 };
 
 export const PROYECTOS_SEMILLA: Proyecto[] = [
@@ -45,7 +44,7 @@ export const PROYECTOS_SEMILLA: Proyecto[] = [
     nombre: "Masa Madre MX",
     emprendedor: "Lucía Fernández",
     categoria: "Alimentos",
-    etapa: "vendiendo",
+    etapa: "iniciado",
     ubicacion: "CDMX, México",
     descripcion:
       "Panadería artesanal de fermentación lenta con entrega a domicilio por suscripción semanal.",
@@ -58,7 +57,7 @@ export const PROYECTOS_SEMILLA: Proyecto[] = [
     nombre: "Rutas Verdes",
     emprendedor: "Diego Herrera",
     categoria: "Tecnología",
-    etapa: "prototipo",
+    etapa: "iniciado",
     ubicacion: "Medellín, Colombia",
     descripcion:
       "App que optimiza rutas de reparto para pequeños negocios y reduce costos de combustible.",
@@ -71,7 +70,7 @@ export const PROYECTOS_SEMILLA: Proyecto[] = [
     nombre: "Hilo Nativo",
     emprendedor: "Camila Rojas",
     categoria: "Moda",
-    etapa: "vendiendo",
+    etapa: "iniciado",
     ubicacion: "Cusco, Perú",
     descripcion:
       "Moda sostenible tejida por artesanas andinas, con historia de origen en cada prenda.",
@@ -84,7 +83,7 @@ export const PROYECTOS_SEMILLA: Proyecto[] = [
     nombre: "Aprende Haciendo",
     emprendedor: "Mateo Vargas",
     categoria: "Educación",
-    etapa: "escalando",
+    etapa: "consolidado",
     ubicacion: "Buenos Aires, Argentina",
     descripcion:
       "Cursos cortos y prácticos de oficios digitales para jóvenes sin acceso a educación formal.",
@@ -97,7 +96,7 @@ export const PROYECTOS_SEMILLA: Proyecto[] = [
     nombre: "SaludCerca",
     emprendedor: "Valentina Cruz",
     categoria: "Salud",
-    etapa: "prototipo",
+    etapa: "iniciado",
     ubicacion: "Guadalajara, México",
     descripcion:
       "Plataforma que conecta a personas mayores con cuidadores verificados por horas.",
@@ -110,7 +109,7 @@ export const PROYECTOS_SEMILLA: Proyecto[] = [
     nombre: "Café de Altura",
     emprendedor: "Andrés Molina",
     categoria: "Agro",
-    etapa: "vendiendo",
+    etapa: "iniciado",
     ubicacion: "Chiapas, México",
     descripcion:
       "Café de especialidad directo del productor, con trazabilidad por lote y tueste bajo demanda.",
@@ -123,7 +122,7 @@ export const PROYECTOS_SEMILLA: Proyecto[] = [
     nombre: "Estudio Pixel",
     emprendedor: "Sofía Navarro",
     categoria: "Creativo",
-    etapa: "vendiendo",
+    etapa: "iniciado",
     ubicacion: "Santiago, Chile",
     descripcion:
       "Estudio de diseño y branding especializado en marcas de emprendedores en etapa temprana.",

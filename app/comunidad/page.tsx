@@ -13,7 +13,7 @@ import type { Etapa } from "@/lib/types";
 import { useUsuario, type Usuario } from "@/lib/auth";
 import { ProyectoCard, Etiqueta } from "@/components/comunidad/ProyectoCard";
 
-const ETAPAS: Etapa[] = ["idea", "prototipo", "vendiendo", "escalando"];
+const ETAPAS: Etapa[] = ["idea", "iniciado", "consolidado"];
 
 export default function ComunidadPage() {
   const { usuario } = useUsuario();

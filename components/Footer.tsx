@@ -5,7 +5,12 @@ export function Footer() {
   return (
     <footer className="border-t border-border bg-surface">
       <div className="contenedor flex flex-col gap-6 py-10 sm:flex-row sm:items-center sm:justify-between">
-        <Logo className="h-16 w-auto" />
+        <div className="flex items-center gap-3">
+          <Logo className="h-16 w-auto" />
+          <span className="font-sub rounded-full border border-border px-3 py-1 text-xs uppercase tracking-[0.2em] text-muted">
+            Powered by Evox
+          </span>
+        </div>
         <nav className="font-sub flex flex-wrap gap-x-5 gap-y-2 text-sm uppercase tracking-wide text-muted">
           <Link href="/estudio" className="hover:text-foreground">
             Estudio

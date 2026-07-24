@@ -1,6 +1,6 @@
 # Evox Entrepreneur ⚡
 
-**Connect · Build · Scale** — El copiloto del ecosistema **EVOX** para emprendedores y builders. Acompaña una idea en todo su camino:
+**Connect · Build · Scale** — Tu coach de negocio con IA (Powered by Evox), para emprendedores. Acompaña una idea en todo su camino:
 
 1. **Valida** — un análisis honesto de la idea (¿problema real?, ¿mercado?, ¿diferenciación?).
 2. **Pule** — como *abogado del diablo constructivo*: encuentra los huecos reales y, por cada uno, da el **"cómo sí"** para ejecutarlo mejor. No busca todos los "no".

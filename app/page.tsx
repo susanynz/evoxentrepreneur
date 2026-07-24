@@ -23,7 +23,7 @@ const PILARES = [
     emoji: "🤝",
     titulo: "Escala",
     texto:
-      "Una comunidad tipo incubadora: los builders se conectan, se refieren y crecen juntos. Connect · Build · Scale.",
+      "Una comunidad tipo incubadora: los emprendedores se conectan, se refieren y crecen juntos. Connect · Build · Scale.",
   },
 ];
 
@@ -44,7 +44,7 @@ const PASOS = [
     n: "03",
     titulo: "Ejecuta y escala en comunidad",
     texto:
-      "Pon el plan en marcha y conéctate con otros builders que ofrecen justo lo que tú buscas.",
+      "Pon el plan en marcha y conéctate con otros emprendedores que ofrecen justo lo que tú buscas.",
   },
 ];
 
@@ -64,7 +64,7 @@ export default function Home() {
           <div className="animar-subir">
             <span className="font-sub inline-flex items-center gap-2 rounded-full border border-border bg-surface px-3 py-1 text-sm uppercase tracking-[0.2em] text-muted">
               <span className="h-2 w-2 rounded-full bg-brand" />
-              Ecosistema EVOX · Connect · Build · Scale
+              Tu coach de negocio con IA · Powered by Evox
             </span>
             <h1 className="mt-5 text-5xl font-extrabold leading-[0.95] sm:text-7xl">
               VALIDA.
@@ -74,10 +74,10 @@ export default function Home() {
               <span className="texto-neon">ESCALA.</span>
             </h1>
             <p className="mt-6 max-w-xl text-lg text-muted">
-              Evox Entrepreneur es el abogado del diablo <em>constructivo</em> que
-              tu idea necesita: no busca todos los &ldquo;no&rdquo;, sino el mejor
-              camino para ejecutarla. Del análisis honesto al plan, la identidad
-              visual y una comunidad que te impulsa a evolucionar.
+              Evox Entrepreneur es tu <em>coach de negocio con IA</em>: valida tu
+              idea con un abogado del diablo constructivo y te lleva paso a paso
+              —sin abrumarte— del análisis al plan, tu identidad visual y tu
+              posicionamiento digital. En 1-3 meses, tu presencia lista.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
@@ -94,7 +94,7 @@ export default function Home() {
               </Link>
             </div>
             <p className="font-sub mt-4 text-sm uppercase tracking-wide text-muted">
-              Sin registro para probar · builders Web3, gaming y más
+              Sin registro para probar · para emprendedores de LatAm
             </p>
           </div>
 
@@ -208,7 +208,7 @@ export default function Home() {
                 Comunidad
               </span>
               <h2 className="mt-3 text-3xl font-bold text-foreground sm:text-4xl">
-                Una incubadora que conecta builders
+                Una incubadora que conecta emprendedores
               </h2>
               <p className="mt-4 text-lg text-foreground/85">
                 Cada miembro declara lo que <strong>ofrece</strong> (contactos,

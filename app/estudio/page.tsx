@@ -79,12 +79,12 @@ export default function EstudioPage() {
       ) : (
         <>
           <header className="mb-8">
-            <h1 className="text-3xl font-bold sm:text-4xl">Estudio de tu idea</h1>
+            <h1 className="text-3xl font-bold sm:text-4xl">Habla con tu coach</h1>
             <p className="mt-3 text-lg text-muted">
-              Cuéntanos tu idea y su contexto —el análisis se adapta a tu etapa,
-              ya sea una idea recién nacida o un negocio en marcha. Te devolvemos
-              validación, tu idea pulida, plan de ejecución, posicionamiento
-              digital e identidad visual.
+              Cuéntale tu negocio y su contexto. Tu coach analiza como un experto
+              —adaptándose a tu etapa— y te devuelve validación honesta, tu idea
+              pulida, un plan orientado a tu posicionamiento digital en 1-3 meses,
+              e identidad visual.
             </p>
           </header>
           <IdeaForm onSubmit={analizar} cargando={false} />
