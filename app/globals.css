@@ -1,0 +1,145 @@
+@import "tailwindcss";
+
+/* ================================================================
+   EVOX ENTREPRENEUR — Sistema de identidad visual (EVOXVERSE)
+   Paleta oficial: Cyber Blue #00B2FF · Neon Purple #8A2BE2 ·
+   Neon Pink #FF2E7A · Deep Space #1E1E2A · Pure White #FFFFFF
+   Marca oscura, futurista, neón. Nunca fondos blancos ni pasteles.
+   ================================================================ */
+:root {
+  color-scheme: dark;
+
+  --background: #08080f;
+  --surface: #12121d;
+  --surface-2: #1e1e2a; /* Deep Space */
+  --foreground: #f4f5fb;
+  --muted: #9a9ab8;
+  --border: #2a2a3c;
+
+  /* Neon Purple = color principal de marca */
+  --brand: #8a2be2;
+  --brand-strong: #a855f7; /* texto/realces sobre oscuro */
+  --brand-ink: #ffffff;
+  --brand-soft: #1d1436;
+
+  /* Cyber Blue = secundario */
+  --blue: #00b2ff;
+  --blue-soft: #0a2436;
+
+  /* Neon Pink = acento/energía */
+  --accent: #ff2e7a;
+  --accent-strong: #ff6aa0;
+  --accent-ink: #ffffff;
+  --accent-soft: #2c1122;
+
+  /* Severidad (mapeada a la paleta) */
+  --alta: #ff2e7a;
+  --alta-soft: #2c1122;
+  --media: #a855f7;
+  --media-soft: #1d1436;
+  --baja: #00b2ff;
+  --baja-soft: #0a2436;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+
+  --color-brand: var(--brand);
+  --color-brand-strong: var(--brand-strong);
+  --color-brand-ink: var(--brand-ink);
+  --color-brand-soft: var(--brand-soft);
+
+  --color-blue: var(--blue);
+  --color-blue-soft: var(--blue-soft);
+
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-soft: var(--accent-soft);
+
+  --color-alta: var(--alta);
+  --color-alta-soft: var(--alta-soft);
+  --color-media: var(--media);
+  --color-media-soft: var(--media-soft);
+  --color-baja: var(--baja);
+  --color-baja-soft: var(--baja-soft);
+
+  --font-sans: var(--font-inter);
+  --font-display: var(--font-orbitron);
+  --font-sub: var(--font-rajdhani);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Títulos en Orbitron; destacados/etiquetas en Rajdhani */
+h1, h2 {
+  font-family: var(--font-display), var(--font-sans), sans-serif;
+  letter-spacing: -0.01em;
+}
+h3, h4 {
+  font-family: var(--font-sub), var(--font-sans), sans-serif;
+  letter-spacing: 0.01em;
+}
+
+/* Layout */
+.contenedor {
+  width: 100%;
+  max-width: 74rem;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+
+/* Wordmark / texto con degradado neón */
+.texto-neon {
+  background: linear-gradient(100deg, var(--blue), var(--brand) 55%, var(--accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Glows neón (acabado premium de la marca) */
+.glow-brand {
+  box-shadow: 0 0 0 1px rgba(138, 43, 226, 0.4), 0 8px 30px -8px rgba(138, 43, 226, 0.7);
+}
+.glow-accent {
+  box-shadow: 0 0 0 1px rgba(255, 46, 122, 0.4), 0 8px 30px -8px rgba(255, 46, 122, 0.7);
+}
+.borde-neon {
+  border: 1px solid var(--border);
+  box-shadow: inset 0 0 0 1px rgba(138, 43, 226, 0.08), 0 0 40px -20px rgba(0, 178, 255, 0.35);
+}
+.hover-neon {
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.hover-neon:hover {
+  border-color: rgba(138, 43, 226, 0.5);
+  box-shadow: 0 0 42px -18px rgba(0, 178, 255, 0.55);
+}
+
+/* Animaciones */
+@keyframes subir {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animar-subir { animation: subir 0.5s ease both; }
+
+@keyframes pulso-neon {
+  0%, 100% { opacity: 1; filter: drop-shadow(0 0 6px rgba(138, 43, 226, 0.7)); }
+  50% { opacity: 0.6; filter: drop-shadow(0 0 14px rgba(0, 178, 255, 0.8)); }
+}
+.animar-pulso { animation: pulso-neon 1.5s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .animar-subir, .animar-pulso { animation: none; }
+}
