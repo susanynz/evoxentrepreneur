@@ -9,150 +9,158 @@ import {
   useState,
 } from "react";
 import type { AnalisisRespuesta, IdeaInput } from "./types";
+import type { AnalisisGuardado, DatosPerfil, Usuario } from "./userTypes";
 
-// Identidad local-first: el perfil y su historial viven en el navegador.
-// Para cuentas reales multi-dispositivo, se cambia esta capa por un backend
-// con base de datos (los componentes que la consumen no cambiarían).
-
-export interface Usuario {
-  id: string;
-  nombre: string;
-  email: string;
-  avatar: string; // emoji
-  rol: string;
-  bio?: string;
-  ubicacion?: string;
-  web?: string;
-  creadoEn: string;
-}
-
-export interface AnalisisGuardado {
-  id: string;
-  titulo: string;
-  fecha: string;
-  input: IdeaInput;
-  respuesta: AnalisisRespuesta;
-}
+// Identidad real: cuentas y entregables persistidos en el servidor (MySQL) vía
+// API. La sesión vive en una cookie httpOnly; el navegador no guarda datos.
+export type { Usuario, AnalisisGuardado, DatosPerfil } from "./userTypes";
 
 interface AuthCtx {
   listo: boolean;
   usuario: Usuario | null;
   analisis: AnalisisGuardado[];
-  crearPerfil: (datos: Omit<Usuario, "id" | "creadoEn">) => void;
-  actualizarPerfil: (parcial: Partial<Omit<Usuario, "id" | "creadoEn">>) => void;
-  cerrarSesion: () => void;
-  guardarAnalisis: (input: IdeaInput, respuesta: AnalisisRespuesta) => void;
-  eliminarAnalisis: (id: string) => void;
+  registro: (datos: DatosPerfil & { password: string }) => Promise<string | null>;
+  login: (email: string, password: string) => Promise<string | null>;
+  actualizarPerfil: (parcial: Partial<DatosPerfil>) => Promise<void>;
+  cerrarSesion: () => Promise<void>;
+  guardarAnalisis: (input: IdeaInput, respuesta: AnalisisRespuesta) => Promise<void>;
+  eliminarAnalisis: (id: string) => Promise<void>;
 }
 
-const KEY_USER = "evox_usuario";
-const KEY_ANALISIS = "evox_analisis";
+interface RespuestaApi {
+  usuario?: Usuario | null;
+  analisis?: AnalisisGuardado[];
+  error?: string;
+}
 
 const Ctx = createContext<AuthCtx | null>(null);
+const JSON_HEADERS = { "Content-Type": "application/json" };
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [listo, setListo] = useState(false);
   const [usuario, setUsuario] = useState<Usuario | null>(null);
   const [analisis, setAnalisis] = useState<AnalisisGuardado[]>([]);
 
+  const cargarAnalisis = useCallback(async () => {
+    try {
+      const res = await fetch("/api/analisis");
+      const data = (await res.json()) as RespuestaApi;
+      setAnalisis(Array.isArray(data.analisis) ? data.analisis : []);
+    } catch {
+      setAnalisis([]);
+    }
+  }, []);
+
   useEffect(() => {
-    try {
-      const u = localStorage.getItem(KEY_USER);
-      if (u) setUsuario(JSON.parse(u));
-      const a = localStorage.getItem(KEY_ANALISIS);
-      if (a) setAnalisis(JSON.parse(a));
-    } catch {
-      /* almacenamiento no disponible */
-    }
-    setListo(true);
-  }, []);
+    (async () => {
+      try {
+        const res = await fetch("/api/auth/yo");
+        const data = (await res.json()) as RespuestaApi;
+        setUsuario(data.usuario ?? null);
+        if (data.usuario) await cargarAnalisis();
+      } catch {
+        /* sin conexión / sin BD */
+      }
+      setListo(true);
+    })();
+  }, [cargarAnalisis]);
 
-  const persistirUsuario = useCallback((u: Usuario | null) => {
-    setUsuario(u);
+  const registro = useCallback(
+    async (datos: DatosPerfil & { password: string }): Promise<string | null> => {
+      try {
+        const res = await fetch("/api/auth/registro", {
+          method: "POST",
+          headers: JSON_HEADERS,
+          body: JSON.stringify(datos),
+        });
+        const data = (await res.json()) as RespuestaApi;
+        if (!res.ok) return data.error ?? "No se pudo crear la cuenta.";
+        setUsuario(data.usuario ?? null);
+        await cargarAnalisis();
+        return null;
+      } catch {
+        return "Error de conexión. Inténtalo de nuevo.";
+      }
+    },
+    [cargarAnalisis],
+  );
+
+  const login = useCallback(
+    async (email: string, password: string): Promise<string | null> => {
+      try {
+        const res = await fetch("/api/auth/login", {
+          method: "POST",
+          headers: JSON_HEADERS,
+          body: JSON.stringify({ email, password }),
+        });
+        const data = (await res.json()) as RespuestaApi;
+        if (!res.ok) return data.error ?? "No se pudo iniciar sesión.";
+        setUsuario(data.usuario ?? null);
+        await cargarAnalisis();
+        return null;
+      } catch {
+        return "Error de conexión. Inténtalo de nuevo.";
+      }
+    },
+    [cargarAnalisis],
+  );
+
+  const actualizarPerfil = useCallback(async (parcial: Partial<DatosPerfil>) => {
     try {
-      if (u) localStorage.setItem(KEY_USER, JSON.stringify(u));
-      else localStorage.removeItem(KEY_USER);
+      const res = await fetch("/api/auth/yo", {
+        method: "PATCH",
+        headers: JSON_HEADERS,
+        body: JSON.stringify(parcial),
+      });
+      const data = (await res.json()) as RespuestaApi;
+      if (res.ok && data.usuario) setUsuario(data.usuario);
     } catch {
       /* ignora */
     }
   }, []);
 
-  const persistirAnalisis = useCallback((lista: AnalisisGuardado[]) => {
-    setAnalisis(lista);
+  const cerrarSesion = useCallback(async () => {
     try {
-      localStorage.setItem(KEY_ANALISIS, JSON.stringify(lista));
+      await fetch("/api/auth/logout", { method: "POST" });
     } catch {
       /* ignora */
     }
+    setUsuario(null);
+    setAnalisis([]);
   }, []);
-
-  const crearPerfil = useCallback(
-    (datos: Omit<Usuario, "id" | "creadoEn">) => {
-      persistirUsuario({
-        ...datos,
-        id: `u_${Date.now()}`,
-        creadoEn: new Date().toISOString(),
-      });
-    },
-    [persistirUsuario],
-  );
-
-  const actualizarPerfil = useCallback(
-    (parcial: Partial<Omit<Usuario, "id" | "creadoEn">>) => {
-      setUsuario((prev) => {
-        if (!prev) return prev;
-        const actualizado = { ...prev, ...parcial };
-        try {
-          localStorage.setItem(KEY_USER, JSON.stringify(actualizado));
-        } catch {
-          /* ignora */
-        }
-        return actualizado;
-      });
-    },
-    [],
-  );
-
-  const cerrarSesion = useCallback(() => {
-    persistirUsuario(null);
-    persistirAnalisis([]);
-  }, [persistirUsuario, persistirAnalisis]);
 
   const guardarAnalisis = useCallback(
-    (input: IdeaInput, respuesta: AnalisisRespuesta) => {
-      const item: AnalisisGuardado = {
-        id: `a_${Date.now()}`,
-        titulo: input.producto.slice(0, 80),
-        fecha: new Date().toISOString(),
-        input,
-        respuesta,
-      };
-      setAnalisis((prev) => {
-        const lista = [item, ...prev];
-        try {
-          localStorage.setItem(KEY_ANALISIS, JSON.stringify(lista));
-        } catch {
-          /* ignora */
-        }
-        return lista;
-      });
+    async (input: IdeaInput, respuesta: AnalisisRespuesta) => {
+      try {
+        const res = await fetch("/api/analisis", {
+          method: "POST",
+          headers: JSON_HEADERS,
+          body: JSON.stringify({ input, respuesta, titulo: input.producto?.slice(0, 200) }),
+        });
+        if (res.ok) await cargarAnalisis();
+      } catch {
+        /* ignora */
+      }
     },
-    [],
+    [cargarAnalisis],
   );
 
-  const eliminarAnalisis = useCallback(
-    (id: string) => {
-      persistirAnalisis(analisis.filter((a) => a.id !== id));
-    },
-    [analisis, persistirAnalisis],
-  );
+  const eliminarAnalisis = useCallback(async (id: string) => {
+    try {
+      await fetch(`/api/analisis?id=${encodeURIComponent(id)}`, { method: "DELETE" });
+    } catch {
+      /* ignora */
+    }
+    setAnalisis((prev) => prev.filter((a) => a.id !== id));
+  }, []);
 
   const valor = useMemo<AuthCtx>(
     () => ({
       listo,
       usuario,
       analisis,
-      crearPerfil,
+      registro,
+      login,
       actualizarPerfil,
       cerrarSesion,
       guardarAnalisis,
@@ -162,7 +170,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       listo,
       usuario,
       analisis,
-      crearPerfil,
+      registro,
+      login,
       actualizarPerfil,
       cerrarSesion,
       guardarAnalisis,

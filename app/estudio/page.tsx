@@ -39,10 +39,10 @@ export default function EstudioPage() {
     setEstado("resultado");
   }
 
-  function guardar() {
+  async function guardar() {
     if (respuesta && ultimoInput) {
-      guardarAnalisis(ultimoInput, respuesta);
       setGuardado(true);
+      await guardarAnalisis(ultimoInput, respuesta);
     }
   }
 

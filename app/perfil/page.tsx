@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useUsuario, type Usuario } from "@/lib/auth";
+import { useUsuario, type DatosPerfil, type Usuario } from "@/lib/auth";
 import { Resultado } from "@/components/estudio/Resultado";
 import {
   STORAGE_KEY_PROYECTOS,
@@ -10,14 +10,14 @@ import {
   type Proyecto,
 } from "@/lib/community";
 
-const AVATARES = ["🚀", "🦾", "🎮", "💡", "🧠", "🛠️", "👾", "🌐", "⚡", "🔥", "🦅", "💎"];
+const AVATARES = ["🚀", "🦾", "🎯", "💡", "🧠", "🛠️", "🌱", "🌐", "⚡", "🔥", "🦅", "💎"];
 const ROLES = [
   "Founder",
-  "Builder",
-  "Trader",
-  "Innovador",
-  "Gamer",
+  "Emprendedor",
   "Creador",
+  "Comerciante",
+  "Freelancer",
+  "Consultor",
   "Inversionista",
   "Estudiante",
 ];
@@ -27,7 +27,8 @@ export default function PerfilPage() {
     listo,
     usuario,
     analisis,
-    crearPerfil,
+    registro,
+    login,
     actualizarPerfil,
     cerrarSesion,
     eliminarAnalisis,
@@ -35,6 +36,9 @@ export default function PerfilPage() {
   const [editando, setEditando] = useState(false);
   const [verId, setVerId] = useState<string | null>(null);
   const [proyectos, setProyectos] = useState<Proyecto[]>([]);
+  const [modo, setModo] = useState<"registro" | "login">("registro");
+  const [err, setErr] = useState<string | null>(null);
+  const [enviando, setEnviando] = useState(false);
 
   useEffect(() => {
     try {
@@ -47,28 +51,73 @@ export default function PerfilPage() {
   }, [usuario]);
 
   if (!listo) {
-    return (
-      <div className="contenedor py-20 text-center text-muted">Cargando…</div>
-    );
+    return <div className="contenedor py-20 text-center text-muted">Cargando…</div>;
   }
 
-  // Sin perfil -> crear
+  // Sin sesión -> registro o login
   if (!usuario) {
     return (
       <div className="contenedor max-w-lg py-12">
         <span className="font-sub text-sm font-semibold uppercase tracking-[0.2em] text-brand-strong">
           Únete al ecosistema
         </span>
-        <h1 className="mt-2 text-3xl font-bold sm:text-4xl">Crea tu perfil</h1>
+        <h1 className="mt-2 text-3xl font-bold sm:text-4xl">
+          {modo === "registro" ? "Crea tu cuenta" : "Inicia sesión"}
+        </h1>
         <p className="mt-3 text-muted">
-          Tu perfil te permite guardar tus análisis, darles seguimiento y
-          conectarte en la comunidad. Belong to the evolution.
+          Tu cuenta guarda tus análisis, tu progreso y tus entregables — y te
+          conecta en la comunidad. Powered by Evox.
         </p>
-        <div className="mt-8">
-          <PerfilForm
-            submitLabel="Crear mi perfil"
-            onSubmit={(d) => crearPerfil(d)}
-          />
+
+        <div className="mt-6 flex gap-1 rounded-xl border border-border bg-surface p-1">
+          {(["registro", "login"] as const).map((m) => (
+            <button
+              key={m}
+              onClick={() => {
+                setModo(m);
+                setErr(null);
+              }}
+              className={`flex-1 rounded-lg px-4 py-2 text-sm font-semibold transition-colors ${
+                modo === m ? "bg-brand text-brand-ink" : "text-muted hover:text-foreground"
+              }`}
+            >
+              {m === "registro" ? "Crear cuenta" : "Iniciar sesión"}
+            </button>
+          ))}
+        </div>
+
+        {err && (
+          <div className="mt-5 rounded-xl border border-alta/40 bg-alta-soft px-4 py-3 text-sm text-foreground">
+            {err}
+          </div>
+        )}
+
+        <div className="mt-6">
+          {modo === "registro" ? (
+            <PerfilForm
+              conPassword
+              submitLabel="Crear mi cuenta"
+              enviando={enviando}
+              onSubmit={async (datos, password) => {
+                setErr(null);
+                setEnviando(true);
+                const e = await registro({ ...datos, password });
+                setEnviando(false);
+                if (e) setErr(e);
+              }}
+            />
+          ) : (
+            <LoginForm
+              enviando={enviando}
+              onSubmit={async (email, password) => {
+                setErr(null);
+                setEnviando(true);
+                const e = await login(email, password);
+                setEnviando(false);
+                if (e) setErr(e);
+              }}
+            />
+          )}
         </div>
       </div>
     );
@@ -89,7 +138,7 @@ export default function PerfilPage() {
     );
   }
 
-  // Editar
+  // Editar perfil
   if (editando) {
     return (
       <div className="contenedor max-w-lg py-12">
@@ -98,8 +147,8 @@ export default function PerfilPage() {
           <PerfilForm
             inicial={usuario}
             submitLabel="Guardar cambios"
-            onSubmit={(d) => {
-              actualizarPerfil(d);
+            onSubmit={async (datos) => {
+              await actualizarPerfil(datos);
               setEditando(false);
             }}
             onCancelar={() => setEditando(false)}
@@ -109,10 +158,9 @@ export default function PerfilPage() {
     );
   }
 
-  // Vista de perfil
+  // Tablero de coaching
   return (
     <div className="contenedor max-w-4xl py-12">
-      {/* Tarjeta de perfil */}
       <section className="borde-neon rounded-2xl bg-surface p-6 sm:p-8">
         <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
           <div className="flex items-start gap-4">
@@ -121,9 +169,7 @@ export default function PerfilPage() {
             </div>
             <div>
               <h1 className="text-2xl font-bold sm:text-3xl">{usuario.nombre}</h1>
-              <p className="font-sub uppercase tracking-wide text-brand-strong">
-                {usuario.rol}
-              </p>
+              <p className="font-sub uppercase tracking-wide text-brand-strong">{usuario.rol}</p>
               <p className="mt-1 text-sm text-muted">
                 {usuario.email}
                 {usuario.ubicacion ? ` · ${usuario.ubicacion}` : ""}
@@ -162,7 +208,6 @@ export default function PerfilPage() {
         </div>
       </section>
 
-      {/* Análisis guardados */}
       <section className="mt-10">
         <h2 className="text-xl font-bold">Tus análisis</h2>
         {analisis.length === 0 ? (
@@ -172,7 +217,7 @@ export default function PerfilPage() {
               href="/estudio"
               className="mt-4 inline-block rounded-lg bg-brand px-5 py-2.5 text-sm font-semibold text-brand-ink"
             >
-              Analizar una idea
+              Hablar con mi coach
             </Link>
           </div>
         ) : (
@@ -214,14 +259,10 @@ export default function PerfilPage() {
         )}
       </section>
 
-      {/* Proyectos en comunidad */}
       <section className="mt-10">
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-bold">Tus proyectos en la comunidad</h2>
-          <Link
-            href="/comunidad"
-            className="text-sm font-medium text-blue hover:underline"
-          >
+          <Link href="/comunidad" className="text-sm font-medium text-blue hover:underline">
             Ir a la comunidad →
           </Link>
         </div>
@@ -233,10 +274,7 @@ export default function PerfilPage() {
         ) : (
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
             {proyectos.map((p) => (
-              <div
-                key={p.id}
-                className="rounded-xl border border-border bg-surface p-4"
-              >
+              <div key={p.id} className="rounded-xl border border-border bg-surface p-4">
                 <div className="flex items-center gap-2">
                   <span className="text-2xl">{p.emoji}</span>
                   <div>
@@ -252,18 +290,9 @@ export default function PerfilPage() {
         )}
       </section>
 
-      {/* Cerrar sesión */}
       <section className="mt-12 border-t border-border pt-6">
         <button
-          onClick={() => {
-            if (
-              confirm(
-                "¿Cerrar sesión? Se borrará tu perfil y tus análisis de este navegador.",
-              )
-            ) {
-              cerrarSesion();
-            }
-          }}
+          onClick={() => cerrarSesion()}
           className="text-sm font-medium text-muted transition-colors hover:text-alta"
         >
           Cerrar sesión
@@ -273,20 +302,10 @@ export default function PerfilPage() {
   );
 }
 
-function Dato({
-  n,
-  texto,
-  label,
-}: {
-  n?: number;
-  texto?: string;
-  label: string;
-}) {
+function Dato({ n, texto, label }: { n?: number; texto?: string; label: string }) {
   return (
     <div>
-      <span className="font-display text-2xl font-bold texto-neon">
-        {texto ?? n}
-      </span>
+      <span className="font-display text-2xl font-bold texto-neon">{texto ?? n}</span>
       <p className="text-xs uppercase tracking-wide text-muted">{label}</p>
     </div>
   );
@@ -296,17 +315,24 @@ function normalizarUrl(u: string): string {
   return /^https?:\/\//i.test(u) ? u : `https://${u}`;
 }
 
-/* ---------------- Formulario de perfil ---------------- */
+const inputCls =
+  "w-full rounded-lg border border-border bg-surface px-3 py-2.5 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand/20 disabled:opacity-60";
+
+/* ---------------- Registro / editar perfil ---------------- */
 
 function PerfilForm({
   inicial,
   submitLabel,
+  conPassword,
+  enviando,
   onSubmit,
   onCancelar,
 }: {
   inicial?: Usuario;
   submitLabel: string;
-  onSubmit: (datos: Omit<Usuario, "id" | "creadoEn">) => void;
+  conPassword?: boolean;
+  enviando?: boolean;
+  onSubmit: (datos: DatosPerfil, password: string) => void;
   onCancelar?: () => void;
 }) {
   const [f, setF] = useState({
@@ -317,17 +343,29 @@ function PerfilForm({
     bio: inicial?.bio ?? "",
     ubicacion: inicial?.ubicacion ?? "",
     web: inicial?.web ?? "",
+    password: "",
   });
 
-  const listo = f.nombre.trim() && f.email.trim();
-  const inp =
-    "w-full rounded-lg border border-border bg-surface px-3 py-2.5 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand/20";
+  const listo =
+    f.nombre.trim() && f.email.trim() && (!conPassword || f.password.length >= 6);
 
   return (
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        if (listo) onSubmit(f);
+        if (!listo || enviando) return;
+        onSubmit(
+          {
+            nombre: f.nombre.trim(),
+            email: f.email.trim(),
+            avatar: f.avatar,
+            rol: f.rol,
+            bio: f.bio.trim() || undefined,
+            ubicacion: f.ubicacion.trim() || undefined,
+            web: f.web.trim() || undefined,
+          },
+          f.password,
+        );
       }}
       className="space-y-5"
     >
@@ -351,88 +389,112 @@ function PerfilForm({
 
       <label className="block">
         <span className="text-sm font-semibold">Nombre</span>
-        <input
-          className={`mt-1.5 ${inp}`}
-          value={f.nombre}
-          onChange={(e) => setF({ ...f, nombre: e.target.value })}
-        />
+        <input className={`mt-1.5 ${inputCls}`} value={f.nombre} onChange={(e) => setF({ ...f, nombre: e.target.value })} />
       </label>
 
       <label className="block">
         <span className="text-sm font-semibold">Email</span>
         <input
           type="email"
-          className={`mt-1.5 ${inp}`}
+          className={`mt-1.5 ${inputCls}`}
           value={f.email}
+          disabled={!!inicial}
           onChange={(e) => setF({ ...f, email: e.target.value })}
         />
       </label>
 
+      {conPassword && (
+        <label className="block">
+          <span className="text-sm font-semibold">Contraseña</span>
+          <input
+            type="password"
+            className={`mt-1.5 ${inputCls}`}
+            value={f.password}
+            onChange={(e) => setF({ ...f, password: e.target.value })}
+            placeholder="Mínimo 6 caracteres"
+          />
+        </label>
+      )}
+
       <div className="grid gap-4 sm:grid-cols-2">
         <label className="block">
           <span className="text-sm font-semibold">Rol</span>
-          <select
-            className={`mt-1.5 ${inp}`}
-            value={f.rol}
-            onChange={(e) => setF({ ...f, rol: e.target.value })}
-          >
+          <select className={`mt-1.5 ${inputCls}`} value={f.rol} onChange={(e) => setF({ ...f, rol: e.target.value })}>
             {ROLES.map((r) => (
-              <option key={r} value={r}>
-                {r}
-              </option>
+              <option key={r} value={r}>{r}</option>
             ))}
           </select>
         </label>
         <label className="block">
           <span className="text-sm font-semibold">Ubicación</span>
-          <input
-            className={`mt-1.5 ${inp}`}
-            value={f.ubicacion}
-            onChange={(e) => setF({ ...f, ubicacion: e.target.value })}
-            placeholder="Ciudad, país"
-          />
+          <input className={`mt-1.5 ${inputCls}`} value={f.ubicacion} onChange={(e) => setF({ ...f, ubicacion: e.target.value })} placeholder="Ciudad, país" />
         </label>
       </div>
 
       <label className="block">
         <span className="text-sm font-semibold">Sitio o red (opcional)</span>
-        <input
-          className={`mt-1.5 ${inp}`}
-          value={f.web}
-          onChange={(e) => setF({ ...f, web: e.target.value })}
-          placeholder="tuweb.com / @usuario"
-        />
+        <input className={`mt-1.5 ${inputCls}`} value={f.web} onChange={(e) => setF({ ...f, web: e.target.value })} placeholder="tuweb.com / @usuario" />
       </label>
 
       <label className="block">
         <span className="text-sm font-semibold">Bio (opcional)</span>
-        <textarea
-          className={`mt-1.5 ${inp}`}
-          rows={3}
-          value={f.bio}
-          onChange={(e) => setF({ ...f, bio: e.target.value })}
-          placeholder="En qué estás trabajando, qué buscas…"
-        />
+        <textarea className={`mt-1.5 ${inputCls}`} rows={3} value={f.bio} onChange={(e) => setF({ ...f, bio: e.target.value })} placeholder="En qué estás trabajando, qué buscas…" />
       </label>
 
       <div className="flex gap-3 pt-2">
         <button
           type="submit"
-          disabled={!listo}
+          disabled={!listo || enviando}
           className="glow-brand rounded-xl bg-brand px-6 py-3 font-semibold text-brand-ink transition-transform hover:scale-[1.03] disabled:opacity-50 disabled:hover:scale-100"
         >
-          {submitLabel}
+          {enviando ? "Guardando…" : submitLabel}
         </button>
         {onCancelar && (
-          <button
-            type="button"
-            onClick={onCancelar}
-            className="rounded-xl border border-border px-6 py-3 font-medium text-muted transition-colors hover:bg-surface"
-          >
+          <button type="button" onClick={onCancelar} className="rounded-xl border border-border px-6 py-3 font-medium text-muted transition-colors hover:bg-surface">
             Cancelar
           </button>
         )}
       </div>
+    </form>
+  );
+}
+
+/* ---------------- Login ---------------- */
+
+function LoginForm({
+  enviando,
+  onSubmit,
+}: {
+  enviando?: boolean;
+  onSubmit: (email: string, password: string) => void;
+}) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const listo = email.trim() && password;
+
+  return (
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        if (listo && !enviando) onSubmit(email.trim(), password);
+      }}
+      className="space-y-5"
+    >
+      <label className="block">
+        <span className="text-sm font-semibold">Email</span>
+        <input type="email" className={`mt-1.5 ${inputCls}`} value={email} onChange={(e) => setEmail(e.target.value)} />
+      </label>
+      <label className="block">
+        <span className="text-sm font-semibold">Contraseña</span>
+        <input type="password" className={`mt-1.5 ${inputCls}`} value={password} onChange={(e) => setPassword(e.target.value)} />
+      </label>
+      <button
+        type="submit"
+        disabled={!listo || enviando}
+        className="glow-brand rounded-xl bg-brand px-6 py-3 font-semibold text-brand-ink transition-transform hover:scale-[1.03] disabled:opacity-50 disabled:hover:scale-100"
+      >
+        {enviando ? "Entrando…" : "Iniciar sesión"}
+      </button>
     </form>
   );
 }

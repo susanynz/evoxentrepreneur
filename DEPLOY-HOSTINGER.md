@@ -39,11 +39,22 @@ git push -u origin main
 | Comando de build | `npm run build` |
 | Comando de inicio | `npm start` |
 
-**4. Variable de entorno** (en la config de la app / "Environment variables"):
+**4. Variables de entorno** (en la config de la app / "Environment variables"):
 
 ```
 ANTHROPIC_API_KEY = sk-ant-tu-clave-real
+MYSQL_HOST         = localhost
+MYSQL_PORT         = 3306
+MYSQL_USER         = tu_usuario_mysql
+MYSQL_PASSWORD     = tu_password_mysql
+MYSQL_DATABASE     = tu_base_de_datos
+AUTH_SECRET        = una-cadena-larga-y-aleatoria
 ```
+
+> **La base de datos MySQL** se crea en hPanel → *Bases de datos MySQL*:
+> crea una base + un usuario, y ahí salen el nombre, usuario, contraseña y host.
+> Las tablas se crean solas la primera vez que alguien se registra.
+> Sin estas variables, la app funciona pero sin cuentas ni datos guardados.
 
 **5. Deploy.** Cada vez que hagas `git push`, puedes volver a desplegar y se
 actualiza.
