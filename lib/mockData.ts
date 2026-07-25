@@ -6,6 +6,7 @@ import type { Analisis, IdeaInput } from "./types";
 export function generarEjemplo(input: IdeaInput): Analisis {
   const cliente = input.cliente?.trim() || "tu cliente ideal";
   const idea = input.producto?.trim() || "tu producto";
+  const foco = input.ofertaPrincipal?.trim();
 
   return {
     veredicto: {
@@ -61,6 +62,9 @@ export function generarEjemplo(input: IdeaInput): Analisis {
         "Especialización y cercanía: resuelves un problema concreto mejor que las soluciones genéricas del mercado.",
       modeloIngresos:
         "Empieza con un modelo simple y directo (pago por servicio o suscripción básica) que puedas cobrar desde el primer cliente, y sofisticas después.",
+      focoInicial: foco
+        ? `Concéntrate en "${foco}" antes que en el resto. Valida y perfecciona esa oferta primero; suma las demás cuando esa ya funcione y venda sola.`
+        : "Elige UNA oferta principal y no te disperses: haz que esa funcione y venda antes de sumar más productos o servicios.",
     },
     planEjecucion: [
       {

@@ -204,6 +204,12 @@ function Pulida({ analisis }: { analisis: Analisis }) {
           {ideaPulida.propuestaValor}
         </p>
       </section>
+      <section className="rounded-2xl border-l-4 border-accent bg-accent-soft p-5">
+        <p className="font-sub text-sm font-semibold uppercase tracking-wide text-accent-strong">
+          Por dónde empezar
+        </p>
+        <p className="mt-1.5 text-foreground">{ideaPulida.focoInicial}</p>
+      </section>
       <div className="grid gap-4 sm:grid-cols-3">
         {items.map((it) => (
           <div key={it.t} className="rounded-2xl border border-border bg-surface p-5">

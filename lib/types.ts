@@ -20,6 +20,7 @@ export interface IdeaInput {
   etapa: Etapa;
   // Bloque 1 — validar y diferenciar
   producto: string;
+  ofertaPrincipal: string;
   problema: string;
   cliente: string;
   diferenciador: string;
@@ -57,6 +58,7 @@ export interface Analisis {
     clienteIdeal: string;
     diferenciador: string;
     modeloIngresos: string;
+    focoInicial: string;
   };
   planEjecucion: {
     fase: string;
@@ -173,8 +175,19 @@ export const analisisJsonSchema = {
           type: "string",
           description: "Cómo gana dinero, planteado de forma realista.",
         },
+        focoInicial: {
+          type: "string",
+          description:
+            "POR DÓNDE EMPEZAR: si tiene muchos productos/servicios, cuál priorizar primero y por qué; si tiene uno, en qué concentrarse. Debe ser una decisión concreta y ejecutable, no genérica.",
+        },
       },
-      required: ["propuestaValor", "clienteIdeal", "diferenciador", "modeloIngresos"],
+      required: [
+        "propuestaValor",
+        "clienteIdeal",
+        "diferenciador",
+        "modeloIngresos",
+        "focoInicial",
+      ],
     },
     planEjecucion: {
       type: "array",

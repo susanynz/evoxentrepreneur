@@ -50,6 +50,7 @@ const CANALES = [
 const VACIO: IdeaInput = {
   etapa: "idea",
   producto: "",
+  ofertaPrincipal: "",
   problema: "",
   cliente: "",
   diferenciador: "",
@@ -66,7 +67,9 @@ const VACIO: IdeaInput = {
 const EJEMPLO: IdeaInput = {
   etapa: "iniciado",
   producto:
-    "Loncheras saludables por suscripción: los papás arman el menú semanal y una red de cocinas locales lo prepara y entrega en la escuela.",
+    "Loncheras saludables por suscripción y, además, snacks sueltos, kits de cumpleaños y catering para eventos escolares.",
+  ofertaPrincipal:
+    "El plan semanal de loncheras por suscripción — es lo recurrente y lo que quiero impulsar primero.",
   problema:
     "Los papás que trabajan no tienen tiempo de preparar loncheras nutritivas y terminan mandando comida chatarra o gastando en la cooperativa.",
   cliente:
@@ -164,8 +167,14 @@ export function IdeaForm({
       {/* Bloque 1 — validar y diferenciar */}
       <section className="space-y-5">
         <SeccionTitulo n="2" titulo="Tu negocio" />
-        <Campo etiqueta="¿Qué producto o servicio ofreces?" ayuda="En una frase concreta." obligatorio>
-          <textarea rows={2} value={form.producto} onChange={(e) => set("producto", e.target.value)} placeholder="Ej: Una plataforma que…" className={inputCls} />
+        <Campo etiqueta="¿Qué ofreces?" ayuda="Un servicio, varios, o tu catálogo. Sé concreto." obligatorio>
+          <textarea rows={2} value={form.producto} onChange={(e) => set("producto", e.target.value)} placeholder="Ej: Un servicio de… / Vendo estos productos…" className={inputCls} />
+        </Campo>
+        <Campo
+          etiqueta="Tu oferta estrella"
+          ayuda="Si tienes varias, la que quieres impulsar primero. Si es una sola, déjalo vacío."
+        >
+          <input value={form.ofertaPrincipal} onChange={(e) => set("ofertaPrincipal", e.target.value)} placeholder="Ej: El plan mensual / mi producto más vendido" className={inputCls} />
         </Campo>
         <Campo etiqueta="¿Qué problema resuelve?" ayuda="El dolor real de tu cliente." obligatorio>
           <textarea rows={2} value={form.problema} onChange={(e) => set("problema", e.target.value)} placeholder="Ej: Hoy la gente pierde tiempo / dinero porque…" className={inputCls} />

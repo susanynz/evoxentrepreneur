@@ -49,6 +49,7 @@ export async function POST(request: Request) {
   const input: IdeaInput = {
     etapa: enUnion(ETAPAS, body.etapa, "idea"),
     producto: texto("producto"),
+    ofertaPrincipal: texto("ofertaPrincipal"),
     problema: texto("problema"),
     cliente: texto("cliente"),
     diferenciador: texto("diferenciador"),

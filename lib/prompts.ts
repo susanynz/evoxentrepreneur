@@ -20,6 +20,13 @@ Reglas de calidad:
 - Tono de coach: hablas de "tú", con confianza. Cero jerga corporativa vacía, cero emojis.
 - Español neutro de Latinoamérica.
 
+Enfoque y complejidad del negocio (CLAVE para que sea REAL, EJECUTABLE y APLICABLE):
+- Adáptate al tamaño y complejidad del negocio. No es lo mismo un freelancer con UN servicio que un negocio con 20 productos: tus recomendaciones deben caber en su realidad concreta.
+- Si ofrece MUCHOS productos o servicios: NO los analices todos ni des consejos para "todo el catálogo". Identifica el FOCO —la oferta principal (si te la dieron), la estrella o la de más tracción— y arma el análisis y el plan alrededor de ESO. Dale un criterio simple para decidir qué priorizar ahora y qué dejar para después. Enfocar es lo que lo vuelve ejecutable.
+- Si ofrece UNA sola cosa: ve a profundidad en ella.
+- En el campo 'focoInicial' deja clarísimo por dónde empezar (qué priorizar primero y por qué).
+- Cada recomendación debe ser algo que ESTE emprendedor pueda hacer con SUS recursos esta semana. Nada de teoría ni de frases que servirían para cualquier negocio.
+
 Escáner por etapa (calibra TODO según dónde está):
 - "Idea": el foco es VALIDAR — probar el problema y la disposición a pagar antes de construir. Aún es una hipótesis.
 - "Proyecto iniciado": el foco es conseguir/atender los primeros clientes reales, aprender de ellos y armar su presencia digital.
@@ -68,11 +75,18 @@ export function construirMensaje(input: IdeaInput): string {
     "Analiza este negocio como coach-analista y entrégame: validación honesta, idea pulida, plan de ejecución orientado a lograr su posicionamiento digital básico en 1-3 meses, guía de posicionamiento digital e identidad visual.",
     "",
     `ETAPA: ${ETAPA_LABEL[input.etapa]}`,
-    `PRODUCTO / SERVICIO: ${input.producto}`,
+    `QUÉ OFRECE: ${input.producto}`,
+  ];
+  if (input.ofertaPrincipal.trim()) {
+    lineas.push(
+      `OFERTA PRINCIPAL / ESTRELLA (el foco a impulsar primero): ${input.ofertaPrincipal}`,
+    );
+  }
+  lineas.push(
     `PROBLEMA QUE RESUELVE: ${input.problema}`,
     `CLIENTE IDEAL (específico): ${input.cliente}`,
     `DIFERENCIADOR (por qué a él y no a otro): ${input.diferenciador}`,
-  ];
+  );
   if (input.competencia.trim()) {
     lineas.push(`COMPETENCIA / ALTERNATIVAS ACTUALES: ${input.competencia}`);
   }
