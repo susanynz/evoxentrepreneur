@@ -105,6 +105,61 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ¿Qué es? + ecosistema */}
+      <section className="contenedor py-16">
+        <div className="grid gap-8 lg:grid-cols-[1fr_1.05fr] lg:items-center">
+          <div>
+            <span className="font-sub text-sm font-semibold uppercase tracking-[0.2em] text-accent-strong">
+              ¿Qué es Evox Entrepreneur?
+            </span>
+            <h2 className="mt-3 text-3xl font-bold sm:text-4xl">
+              Tu coach de negocio con IA, de la idea al lanzamiento
+            </h2>
+            <p className="mt-4 text-lg text-muted">
+              Evox Entrepreneur te acompaña, paso a paso y sin abrumarte, a{" "}
+              <strong className="text-foreground">validar</strong> tu idea,{" "}
+              <strong className="text-foreground">pulirla</strong>, crear tu{" "}
+              <strong className="text-foreground">identidad visual</strong> y
+              lograr tu <strong className="text-foreground">posicionamiento
+              digital</strong> en 1-3 meses. Y no te suelta: queda disponible para
+              consultar tus dudas de IA cuando las tengas.
+            </p>
+          </div>
+
+          <div
+            className="borde-neon rounded-3xl p-6 sm:p-8"
+            style={{
+              background:
+                "linear-gradient(135deg, rgba(138,43,226,0.14), rgba(0,178,255,0.10) 60%, rgba(255,46,122,0.10))",
+            }}
+          >
+            <p className="font-sub text-sm font-semibold uppercase tracking-[0.2em] text-brand-strong">
+              Parte del ecosistema
+            </p>
+            <p className="mt-2 font-display text-2xl font-bold tracking-widest">
+              <span className="texto-neon">EVOX</span>
+              <span className="text-foreground">VERSE</span>
+            </p>
+            <p className="mt-3 text-foreground/85">
+              Evox Entrepreneur es parte de <strong>EVOXVERSE</strong>, el
+              ecosistema Evox. Su comunidad e incubadora viven en{" "}
+              <strong>Evox Learn</strong>, donde los emprendedores se forman y se
+              impulsan entre ellos.
+            </p>
+            <div className="mt-5 grid gap-3 sm:grid-cols-2">
+              <div className="rounded-2xl border border-brand bg-brand-soft p-4">
+                <p className="text-sm font-bold text-brand-strong">Evox Entrepreneur</p>
+                <p className="mt-0.5 text-xs text-muted">Tu coach · estás aquí</p>
+              </div>
+              <div className="rounded-2xl border border-border bg-surface p-4">
+                <p className="text-sm font-bold">Evox Learn</p>
+                <p className="mt-0.5 text-xs text-muted">Formación e incubadora</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Pilares */}
       <section className="contenedor py-16">
         <div className="max-w-2xl">
@@ -205,7 +260,7 @@ export default function Home() {
           >
             <div className="max-w-2xl">
               <span className="font-sub text-sm font-semibold uppercase tracking-[0.2em] text-brand-strong">
-                Comunidad
+                Comunidad · Evox Learn
               </span>
               <h2 className="mt-3 text-3xl font-bold text-foreground sm:text-4xl">
                 Una incubadora que conecta emprendedores

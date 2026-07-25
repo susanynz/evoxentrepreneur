@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useUsuario, type DatosPerfil, type Usuario } from "@/lib/auth";
+import { Logo } from "@/components/Logo";
 import { Resultado } from "@/components/estudio/Resultado";
 import {
   STORAGE_KEY_PROYECTOS,
@@ -54,70 +55,96 @@ export default function PerfilPage() {
     return <div className="contenedor py-20 text-center text-muted">Cargando…</div>;
   }
 
-  // Sin sesión -> registro o login
+  // Sin sesión -> pantalla de registro / login (con marca)
   if (!usuario) {
+    const esRegistro = modo === "registro";
     return (
-      <div className="contenedor max-w-lg py-12">
-        <span className="font-sub text-sm font-semibold uppercase tracking-[0.2em] text-brand-strong">
-          Únete al ecosistema
-        </span>
-        <h1 className="mt-2 text-3xl font-bold sm:text-4xl">
-          {modo === "registro" ? "Crea tu cuenta" : "Inicia sesión"}
-        </h1>
-        <p className="mt-3 text-muted">
-          Tu cuenta guarda tus análisis, tu progreso y tus entregables — y te
-          conecta en la comunidad. Powered by Evox.
-        </p>
+      <div className="relative overflow-hidden">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 -z-10"
+          style={{
+            background:
+              "radial-gradient(46rem 30rem at 80% -10%, rgba(138,43,226,0.28), transparent 60%), radial-gradient(34rem 24rem at 5% 5%, rgba(0,178,255,0.18), transparent 55%)",
+          }}
+        />
+        <div className="contenedor flex min-h-[72vh] items-center justify-center py-12">
+          <div className={`w-full ${esRegistro ? "max-w-xl" : "max-w-md"}`}>
+            <div className="mb-6 flex flex-col items-center text-center">
+              <Logo className="h-14 w-auto" />
+              <p className="font-sub mt-2 text-xs uppercase tracking-[0.3em] text-muted">
+                Belong to the evolution
+              </p>
+            </div>
 
-        <div className="mt-6 flex gap-1 rounded-xl border border-border bg-surface p-1">
-          {(["registro", "login"] as const).map((m) => (
-            <button
-              key={m}
-              onClick={() => {
-                setModo(m);
-                setErr(null);
-              }}
-              className={`flex-1 rounded-lg px-4 py-2 text-sm font-semibold transition-colors ${
-                modo === m ? "bg-brand text-brand-ink" : "text-muted hover:text-foreground"
-              }`}
-            >
-              {m === "registro" ? "Crear cuenta" : "Iniciar sesión"}
-            </button>
-          ))}
-        </div>
+            <div className="borde-neon rounded-3xl bg-surface p-6 sm:p-8">
+              <h1 className="text-2xl font-bold sm:text-3xl">
+                {esRegistro ? "Crea tu cuenta" : "Bienvenido de vuelta"}
+              </h1>
+              <p className="mt-1.5 text-sm text-muted">
+                {esRegistro
+                  ? "Tu coach guarda tu progreso y tus entregables, y te conecta en la comunidad."
+                  : "Entra para ver tu tablero, tus análisis y tu progreso."}
+              </p>
 
-        {err && (
-          <div className="mt-5 rounded-xl border border-alta/40 bg-alta-soft px-4 py-3 text-sm text-foreground">
-            {err}
+              <div className="mt-6 flex gap-1 rounded-xl border border-border bg-background p-1">
+                {(["registro", "login"] as const).map((m) => (
+                  <button
+                    key={m}
+                    onClick={() => {
+                      setModo(m);
+                      setErr(null);
+                    }}
+                    className={`flex-1 rounded-lg px-4 py-2 text-sm font-semibold transition-colors ${
+                      modo === m
+                        ? "bg-brand text-brand-ink"
+                        : "text-muted hover:text-foreground"
+                    }`}
+                  >
+                    {m === "registro" ? "Crear cuenta" : "Iniciar sesión"}
+                  </button>
+                ))}
+              </div>
+
+              {err && (
+                <div className="mt-5 rounded-xl border border-alta/40 bg-alta-soft px-4 py-3 text-sm text-foreground">
+                  {err}
+                </div>
+              )}
+
+              <div className="mt-6">
+                {esRegistro ? (
+                  <PerfilForm
+                    conPassword
+                    submitLabel="Crear mi cuenta"
+                    enviando={enviando}
+                    onSubmit={async (datos, password) => {
+                      setErr(null);
+                      setEnviando(true);
+                      const e = await registro({ ...datos, password });
+                      setEnviando(false);
+                      if (e) setErr(e);
+                    }}
+                  />
+                ) : (
+                  <LoginForm
+                    enviando={enviando}
+                    onSubmit={async (email, password) => {
+                      setErr(null);
+                      setEnviando(true);
+                      const e = await login(email, password);
+                      setEnviando(false);
+                      if (e) setErr(e);
+                    }}
+                  />
+                )}
+              </div>
+            </div>
+
+            <p className="mt-5 text-center text-xs text-muted">
+              Powered by Evox · Parte del ecosistema EVOXVERSE
+            </p>
           </div>
-        )}
-
-        <div className="mt-6">
-          {modo === "registro" ? (
-            <PerfilForm
-              conPassword
-              submitLabel="Crear mi cuenta"
-              enviando={enviando}
-              onSubmit={async (datos, password) => {
-                setErr(null);
-                setEnviando(true);
-                const e = await registro({ ...datos, password });
-                setEnviando(false);
-                if (e) setErr(e);
-              }}
-            />
-          ) : (
-            <LoginForm
-              enviando={enviando}
-              onSubmit={async (email, password) => {
-                setErr(null);
-                setEnviando(true);
-                const e = await login(email, password);
-                setEnviando(false);
-                if (e) setErr(e);
-              }}
-            />
-          )}
         </div>
       </div>
     );
