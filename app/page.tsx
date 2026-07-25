@@ -142,19 +142,37 @@ export default function Home() {
             </p>
             <p className="mt-3 text-foreground/85">
               Evox Entrepreneur es parte de <strong>EVOXVERSE</strong>, el
-              ecosistema Evox. Su comunidad e incubadora viven en{" "}
-              <strong>Evox Learn</strong>, donde los emprendedores se forman y se
-              impulsan entre ellos.
+              ecosistema Evox — junto a{" "}
+              <a
+                href="https://evoxlearn.evoxverse.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-semibold text-blue hover:underline"
+              >
+                Evox Learn
+              </a>
+              , la plataforma de educación. Aquí construyes y te conectas en
+              comunidad; ahí te sigues formando.
             </p>
             <div className="mt-5 grid gap-3 sm:grid-cols-2">
               <div className="rounded-2xl border border-brand bg-brand-soft p-4">
                 <p className="text-sm font-bold text-brand-strong">Evox Entrepreneur</p>
                 <p className="mt-0.5 text-xs text-muted">Tu coach · estás aquí</p>
               </div>
-              <div className="rounded-2xl border border-border bg-surface p-4">
-                <p className="text-sm font-bold">Evox Learn</p>
-                <p className="mt-0.5 text-xs text-muted">Formación e incubadora</p>
-              </div>
+              <a
+                href="https://evoxlearn.evoxverse.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group rounded-2xl border border-border bg-surface p-4 transition-colors hover:border-brand hover:bg-brand-soft/40"
+              >
+                <p className="flex items-center gap-1.5 text-sm font-bold">
+                  Evox Learn
+                  <span className="text-xs text-muted transition-colors group-hover:text-brand-strong">
+                    ↗
+                  </span>
+                </p>
+                <p className="mt-0.5 text-xs text-muted">Educación</p>
+              </a>
             </div>
           </div>
         </div>
@@ -260,7 +278,7 @@ export default function Home() {
           >
             <div className="max-w-2xl">
               <span className="font-sub text-sm font-semibold uppercase tracking-[0.2em] text-brand-strong">
-                Comunidad · Evox Learn
+                Comunidad
               </span>
               <h2 className="mt-3 text-3xl font-bold text-foreground sm:text-4xl">
                 Una incubadora que conecta emprendedores
