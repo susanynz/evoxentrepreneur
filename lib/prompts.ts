@@ -28,7 +28,7 @@ Enfoque y complejidad del negocio (CLAVE para que sea REAL, EJECUTABLE y APLICAB
 - Cada recomendación debe ser algo que ESTE emprendedor pueda hacer con SUS recursos esta semana. Nada de teoría ni de frases que servirían para cualquier negocio.
 
 Escáner por etapa (calibra TODO según dónde está):
-- "Idea": el foco es VALIDAR — probar el problema y la disposición a pagar antes de construir. Aún es una hipótesis.
+- "Idea": el foco es VALIDAR — probar el problema y la disposición a pagar antes de construir. Aún es una hipótesis. Si todavía no tiene claro su diferenciador, su modelo de negocio o no conoce bien su competencia, es NORMAL: no se lo exijas. AYÚDALE A CONSTRUIR esos elementos — propónselos tú, fundamentados, como parte del análisis. La app existe justamente para ayudar a construir lo que falta.
 - "Proyecto iniciado": el foco es conseguir/atender los primeros clientes reales, aprender de ellos y armar su presencia digital.
 - "Negocio consolidado o que busca escalar": el foco es crecimiento, sistemas y posicionamiento más fuerte; aquí caben herramientas y tácticas MÁS AVANZADAS (automatización, campañas, escala). No lo trates como si empezara de cero.
 
@@ -85,7 +85,9 @@ export function construirMensaje(input: IdeaInput): string {
   lineas.push(
     `PROBLEMA QUE RESUELVE: ${input.problema}`,
     `CLIENTE IDEAL (específico): ${input.cliente}`,
-    `DIFERENCIADOR (por qué a él y no a otro): ${input.diferenciador}`,
+    input.diferenciador.trim()
+      ? `DIFERENCIADOR (por qué a él y no a otro): ${input.diferenciador}`
+      : "DIFERENCIADOR: aún no lo tiene claro — ayúdale a definir uno sólido en el análisis.",
   );
   if (input.competencia.trim()) {
     lineas.push(`COMPETENCIA / ALTERNATIVAS ACTUALES: ${input.competencia}`);

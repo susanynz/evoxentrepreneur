@@ -111,7 +111,6 @@ export function IdeaForm({
     form.producto.trim() &&
     form.problema.trim() &&
     form.cliente.trim() &&
-    form.diferenciador.trim() &&
     form.recursos.trim();
 
   return (
@@ -182,10 +181,13 @@ export function IdeaForm({
         <Campo etiqueta="¿Quién es tu cliente ideal?" ayuda="Lo más específico posible, y dónde está." obligatorio>
           <textarea rows={2} value={form.cliente} onChange={(e) => set("cliente", e.target.value)} placeholder="Ej: Dueños de pequeños restaurantes en…" className={inputCls} />
         </Campo>
-        <Campo etiqueta="¿Por qué te elegirían a ti y no a otra opción?" ayuda="Tu diferenciador." obligatorio>
-          <textarea rows={2} value={form.diferenciador} onChange={(e) => set("diferenciador", e.target.value)} placeholder="Ej: Somos más rápidos / especializados / cercanos porque…" className={inputCls} />
+        <Campo
+          etiqueta="¿Por qué te elegirían a ti y no a otra opción?"
+          ayuda="Tu diferenciador. Si aún no lo tienes claro, déjalo — tu coach te ayuda a construirlo."
+        >
+          <textarea rows={2} value={form.diferenciador} onChange={(e) => set("diferenciador", e.target.value)} placeholder="Ej: Somos más rápidos / especializados / cercanos… (o déjalo si aún no lo sabes)" className={inputCls} />
         </Campo>
-        <Campo etiqueta="¿Con qué compites hoy?" ayuda="Qué usa tu cliente ahora para resolverlo.">
+        <Campo etiqueta="¿Con qué compites hoy?" ayuda="Qué usa tu cliente ahora. Si no lo sabes, no pasa nada.">
           <textarea rows={2} value={form.competencia} onChange={(e) => set("competencia", e.target.value)} placeholder="Ej: Lo resuelven con Excel, con la competencia X, o a mano." className={inputCls} />
         </Campo>
       </section>

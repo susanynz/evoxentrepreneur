@@ -19,7 +19,7 @@ const OBJETIVOS: Objetivo[] = [
 ];
 const NIVELES_IA: NivelIA[] = ["nunca", "basico", "seguido", "integrada"];
 
-const REQUERIDOS = ["producto", "problema", "cliente", "diferenciador", "recursos"] as const;
+const REQUERIDOS = ["producto", "problema", "cliente", "recursos"] as const;
 
 export async function POST(request: Request) {
   let body: Record<string, unknown>;
