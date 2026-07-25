@@ -143,3 +143,10 @@ h3, h4 {
 @media (prefers-reduced-motion: reduce) {
   .animar-subir, .animar-pulso { animation: none; }
 }
+
+/* Impresión / exportar a PDF: solo el documento del brand book */
+@media print {
+  header, footer, .no-print { display: none !important; }
+  body { background: #ffffff !important; }
+  .bb-doc { box-shadow: none !important; border: none !important; border-radius: 0 !important; }
+}
