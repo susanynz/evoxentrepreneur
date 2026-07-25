@@ -341,3 +341,69 @@ export const analisisJsonSchema = {
     "identidadVisual",
   ],
 } as const;
+
+// ---- Guías de IA (coach de consulta) ----
+
+export interface GuiaInput {
+  pregunta: string;
+  contexto?: string; // resumen del negocio, para personalizar
+  nivel?: NivelIA;
+}
+
+export interface Guia {
+  titulo: string;
+  resumen: string;
+  herramienta: { nombre: string; porQue: string; docUrl?: string };
+  pasos: string[];
+  ejemploPrompt: string;
+  siguientePaso: string;
+}
+
+export interface GuiaRespuesta {
+  guia: Guia;
+  fuente: "ia" | "ejemplo";
+}
+
+// El docUrl lo agrega el servidor (no la IA) para evitar enlaces inventados.
+export const guiaJsonSchema = {
+  type: "object",
+  additionalProperties: false,
+  properties: {
+    titulo: { type: "string", description: "Título corto y claro de la guía." },
+    resumen: {
+      type: "string",
+      description: "1-2 frases: qué va a lograr con esto en su negocio.",
+    },
+    herramienta: {
+      type: "object",
+      additionalProperties: false,
+      properties: {
+        nombre: {
+          type: "string",
+          description:
+            "La herramienta de IA más adecuada. Preferentemente una de: Claude, ChatGPT, Gemini, Canva.",
+        },
+        porQue: {
+          type: "string",
+          description: "Por qué esa herramienta para esta tarea concreta.",
+        },
+      },
+      required: ["nombre", "porQue"],
+    },
+    pasos: {
+      type: "array",
+      items: { type: "string" },
+      description: "3 a 6 pasos concretos y accionables que pueda hacer hoy.",
+    },
+    ejemploPrompt: {
+      type: "string",
+      description:
+        "Un prompt de ejemplo LISTO para copiar y pegar en la herramienta, ya adaptado a su negocio.",
+    },
+    siguientePaso: {
+      type: "string",
+      description: "Qué hacer después, una vez logrado esto.",
+    },
+  },
+  required: ["titulo", "resumen", "herramienta", "pasos", "ejemploPrompt", "siguientePaso"],
+} as const;

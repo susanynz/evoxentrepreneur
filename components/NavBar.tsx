@@ -8,6 +8,7 @@ import { useUsuario } from "@/lib/auth";
 const LINKS = [
   { href: "/", label: "Inicio" },
   { href: "/estudio", label: "Estudio" },
+  { href: "/guias", label: "Guías" },
   { href: "/comunidad", label: "Comunidad" },
 ];
 
